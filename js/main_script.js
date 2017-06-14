@@ -1,9 +1,17 @@
 $(function()
   {
-
       //###########################################################################
       //CONSTANTS
       //###########################################################################
+
+      var START_BUTTON = $("#start_btn");
+      var STOP_BUTTON = $("#stop_btn");
+      var FIRST_ALG_SELECT = $("#first_algorithm_select");
+      var SECOND_ALG_SELECT = $("#second_algorithm_select");
+      var ELEMENTS_COUNT_SELECT = $("#elements_count_select");
+      var ARRAY_TYPE_SELECT = $("#array_type_select");
+      var INTERVAL_SELECT = $("#interval_select");
+      var ELEMENTS_CONTAINERS = $(".algorithm_div");
 
       var DEFAULT_COLOR = "#777";
       var SELECTED_COLOR = "#00f";
@@ -26,7 +34,6 @@ $(function()
       };
 
       var SPACING = 3;
-      var ELEMENTS_CONTAINERS = $(".algorithm_div");
       var ELEMENTS_CONTAINERS_WIDTH = $(ELEMENTS_CONTAINERS[0]).width();
       var ELEMENTS_MAX_VALUE = $(ELEMENTS_CONTAINERS[0]).height();
       var ELEMENTS_MIN_VALUE = 5;
@@ -35,16 +42,16 @@ $(function()
       //POPULATE DOM
       //###########################################################################
 
-      $("#stop_btn").attr("disabled", true);
+      $(STOP_BUTTON).attr("disabled", true);
 
       $.each(ALGORITHMS, function(key, value)
       {
-          $("#first_algorithm_select").append($("<option>", {
+          $(FIRST_ALG_SELECT).append($("<option>", {
               value: key,
               text: key
           }));
 
-          $("#second_algorithm_select").append($("<option>", {
+          $(SECOND_ALG_SELECT).append($("<option>", {
               value: key,
               text: key
           }));
@@ -52,7 +59,7 @@ $(function()
 
       $.each(ARRAY_TYPES, function(key, value)
       {
-          $("#array_type_select").append($("<option>", {
+          $(ARRAY_TYPE_SELECT).append($("<option>", {
               value: key,
               text: key
           }));
@@ -62,14 +69,14 @@ $(function()
       //VARIABLES
       //###########################################################################
 
-      var _first_sorting_alg_func = ALGORITHMS[$("#first_algorithm_select").find(":selected").text()];
-      var _second_sorting_alg_func = ALGORITHMS[$("#second_algorithm_select").find(":selected").text()];
-      var _array_type_func = ARRAY_TYPES[$("#array_type_select").find(":selected").text()];
+      var _first_sorting_alg_func = ALGORITHMS[$(FIRST_ALG_SELECT).find(":selected").text()];
+      var _second_sorting_alg_func = ALGORITHMS[$(SECOND_ALG_SELECT).find(":selected").text()];
+      var _array_type_func = ARRAY_TYPES[$(ARRAY_TYPE_SELECT).find(":selected").text()];
 
-      var _elements_count = parseInt($("#elements_count").val(), 10);
+      var _elements_count = parseInt($(ELEMENTS_COUNT_SELECT).val(), 10);
       var _elements_to_sort = _array_type_func(ELEMENTS_MIN_VALUE, ELEMENTS_MAX_VALUE, _elements_count);
 
-      var _interval = $("#interval").val();
+      var _interval = $(INTERVAL_SELECT).val();
       var _first_setInterval_id = 0;
       var _second_setInterval_id = 0;
 
@@ -362,7 +369,7 @@ $(function()
       //ANIMATE SORTING
       //###########################################################################
 
-      function step(container, actions, interval)
+      function step(container, actions)
       {
           /*
            * Consumes one step from the action buffer, using it to update
@@ -379,6 +386,7 @@ $(function()
               else
               {
                   window.clearInterval(_second_setInterval_id);
+                  lock_dom_elements(false);
               }
               return;
           }
@@ -390,15 +398,15 @@ $(function()
 
           if(action === "compare")
           {
-              first_element = container.children().eq(action_object[1]);
-              second_element = container.children().eq(action_object[2]);
+              first_element = $(container).children().eq(action_object[1]);
+              second_element = $(container).children().eq(action_object[2]);
               $(first_element).css("background-color", SELECTED_COLOR);
               $(second_element).css("background-color", COMPARED_COLOR);
           }
           else if(action === "swap")
           {
-              first_element = container.children().eq(action_object[1]);
-              second_element = container.children().eq(action_object[2]);
+              first_element = $(container).children().eq(action_object[1]);
+              second_element = $(container).children().eq(action_object[2]);
               $(first_element).css("background-color", SWAP_COLOR);
               $(second_element).css("background-color", SWAP_COLOR);
               var t = $(first_element).height();
@@ -408,14 +416,14 @@ $(function()
           else if(action === "insert")
           {
               var value = action_object[2];
-              first_element = container.children().eq(action_object[1]);
+              first_element = $(container).children().eq(action_object[1]);
               $(first_element).css("background-color", SINGLE_CHANGE_COLOR);
               $(first_element).height(value);
           }
           else if(action === "insert_extend")
           {
-              first_element = container.children().eq(action_object[1]);
-              second_element = container.children().eq(action_object[2]);
+              first_element = $(container).children().eq(action_object[1]);
+              second_element = $(container).children().eq(action_object[2]);
               $(first_element).css("background-color", SWAP_COLOR);
               $(second_element).css("background-color", SWAP_COLOR);
               $(first_element).height(second_element.height());
@@ -425,14 +433,14 @@ $(function()
                             {
                                 $(first_element).css("background-color", DEFAULT_COLOR);
                                 $(second_element).css("background-color", DEFAULT_COLOR);
-                            }, interval - 100);
+                            }, _interval - 100);
       }
 
       //###########################################################################
       //ATTACHED EVENTS
       //###########################################################################
 
-      $("#elements_count").change(function()
+      $(ELEMENTS_COUNT_SELECT).change(function()
                                   {
                                       _elements_count = parseInt($(this).val(), 10);
                                       _elements_to_sort = _array_type_func(ELEMENTS_MIN_VALUE,
@@ -443,19 +451,19 @@ $(function()
                                       draw_elements(ELEMENTS_CONTAINERS[1], _elements_to_sort, _elements_count);
                                   });
 
-      $("#first_algorithm_select").change(function()
+      $(FIRST_ALG_SELECT).change(function()
                                           {
                                               var alg_name = $(this).val();
                                               _first_sorting_alg_func = ALGORITHMS[alg_name];
                                           });
 
-      $("#second_algorithm_select").change(function()
+      $(SECOND_ALG_SELECT).change(function()
                                            {
                                                var alg_name = $(this).val();
                                                _second_sorting_alg_func = ALGORITHMS[alg_name];
                                            });
 
-      $("#array_type_select").change(function()
+      $(ARRAY_TYPE_SELECT).change(function()
                                      {
                                          var arr_type = $(this).val();
                                          _array_type_func = ARRAY_TYPES[arr_type];
@@ -467,18 +475,13 @@ $(function()
                                          draw_elements(ELEMENTS_CONTAINERS[1], _elements_to_sort, _elements_count);
                                      });
 
-      $("#start_btn").on("click", function()
+      $(START_BUTTON).on("click", function()
       {
-          $("#stop_btn").attr("disabled", false);
-          $("#first_algorithm_select").attr("disabled", true);
-          $("#second_algorithm_select").attr("disabled", true);
-          $("#elements_count").attr("disabled", true);
-          $("#init_select").attr("disabled", true);
-          $("#interval").attr("disabled", true);
-          $("#start_btn").attr("disabled", true);
+          lock_dom_elements(true);
 
-          var first_alg_actions = _first_sorting_alg_func(_elements_to_sort);
-          var second_alg_actions = _second_sorting_alg_func(_elements_to_sort.slice());
+          var _elements_to_sort_copy = _elements_to_sort.slice();
+          var first_alg_actions = _first_sorting_alg_func(_elements_to_sort)[0];
+          var second_alg_actions = _second_sorting_alg_func(_elements_to_sort_copy)[0];
 
           _first_setInterval_id = window.setInterval(function()
                                                      {
@@ -491,19 +494,24 @@ $(function()
                                                       }, _interval);
       });
 
-      $("#stop_btn").on("click", function()
+      $(STOP_BUTTON).on("click", function()
       {
           window.clearInterval(_first_setInterval_id);
           window.clearInterval(_second_setInterval_id);
 
-          $("#stop_btn").attr("disabled", true);
-          $("#first_algorithm_select").attr("disabled", false);
-          $("#second_algorithm_select").attr("disabled", false);
-          $("#elements_count").attr("disabled", false);
-          $("#init_select").attr("disabled", false);
-          $("#interval").attr("disabled", false);
-          $("#start_btn").attr("disabled", false);
+          lock_dom_elements(false);
       });
+
+      function lock_dom_elements(lock)
+      {
+          $(STOP_BUTTON).attr("disabled", !lock);
+          $(FIRST_ALG_SELECT).attr("disabled", lock);
+          $(SECOND_ALG_SELECT).attr("disabled", lock);
+          $(ELEMENTS_COUNT_SELECT).attr("disabled", lock);
+          $(ARRAY_TYPE_SELECT).attr("disabled", lock);
+          $(INTERVAL_SELECT).attr("disabled", lock);
+          $(START_BUTTON).attr("disabled", lock);
+      }
 
       draw_elements(ELEMENTS_CONTAINERS[0], _elements_to_sort, _elements_count);
       draw_elements(ELEMENTS_CONTAINERS[1], _elements_to_sort, _elements_count);
