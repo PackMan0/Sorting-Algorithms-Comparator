@@ -1,0 +1,55 @@
+#container{
+    width: 1920px;
+    height: 950px;
+}
+
+#options_container{
+    background-color: silver;
+    height: 10%;
+    text-align: center;
+    border-bottom: 2px solid black;
+}
+
+#options_container div {
+    display: inline-block;
+    margin: 10px;
+}
+
+#options_container div > *{
+    display: inline-block;
+    width: auto;
+}
+
+#algorithm_elements_container{
+    height: 60%;
+    text-align: center;
+    background-color: black;
+}
+
+#first_algorithm_div{
+    margin-right: 0.5%;
+}
+
+.algorithm_div{
+    width: 49.5%;
+    height: 100%;
+    background-color: white;
+    display: inline-block;
+    position:relative;
+}
+
+.algorithm_element{
+    display: inline-block;
+    background-color: #777777;
+    width: 100px;
+    height: 150px;
+    position:absolute;
+    bottom: 0;
+}
+
+#description_container{
+    background-color: green;
+    height: 30%;
+    border-top: 2px solid black;
+}
+

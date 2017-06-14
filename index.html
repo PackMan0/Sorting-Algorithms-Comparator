@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sorting Algorithms</title>
+    <link href='css/bootstrap.min.css' rel='stylesheet'>
+    <link href='css/style.css' rel='stylesheet'>
+    <script src='js/jquery-1.11.3.min.js'></script>
+    <script src='js/bootstrap.min.js'></script>
+</head>
+<body>
+<div id="container">
+    <div id="options_container">
+        <div>
+            <label for="first_algorithm_select">Algorithm</label>
+            <select id="first_algorithm_select" class='form_control'></select>
+            <label for="second_algorithm_select">Algorithm</label>
+            <select id="second_algorithm_select" class='form_control'></select>
+        </div>
+        <div>
+            <label for="elements_count">Elements Count</label>
+            <input id="elements_count" class='form_control' type='number' value="50" step="10" min="10" max="200"/>
+        </div>
+        <div>
+            <label for='init_select'>Initial array</label>
+            <select class='form_control' id='init_select'></select>
+        </div>
+        <div>
+            <label for='interval'>Interval (ms)</label>
+            <input id='interval' class='form_control' type='number' value="500" step="250" min="250" max="2000"/>
+        </div>
+        <div>
+            <button class='btn btn-lg btn-primary' id='start_btn'>Start</button>
+        </div>
+        <div>
+            <button class='btn btn-lg btn-primary' id='stop_btn'>Stop</button>
+        </div>
+    </div>
+    <div id="algorithm_elements_container">
+        <div class="algorithm_div" id="first_algorithm_div">
+        </div>
+        <div class="algorithm_div" id="second_algorithm_div">
+        </div>
+    </div>
+    <div id="description_container">
+        <div id="pseudocode">
+            <p>Some pseudocode</p>
+        </div>
+        <div id="description">
+            <p>Some long text</p>
+        </div>
+    </div>
+
+</div>
+</div>
+</body>
+<script type="text/javascript" src="js/main_script.js"></script>
+</html>
