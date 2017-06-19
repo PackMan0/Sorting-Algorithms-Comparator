@@ -30,7 +30,7 @@
     margin-right: 0.5%;
 }
 
-.algorithm_div{
+.element_container{
     width: 49.5%;
     height: 100%;
     background-color: white;
@@ -47,9 +47,29 @@
     bottom: 0;
 }
 
-#description_container{
-    background-color: green;
-    height: 30%;
+#descriptions{
+    background-color: black;
     border-top: 2px solid black;
+}
+
+.description_container{
+    width: 49.5%;
+    background-color: silver;
+    display: inline-block;
+}
+
+#first_alg_description_div{
+    margin-left: 3px;
+    margin-right: 0.5%;
+}
+
+p {
+    margin: 0;
+    font-size: 22px;
+    font-family: "Arial", Arial, sans-serif;
+}
+
+#pseudocodes_container{
+    display: none;
 }
 
