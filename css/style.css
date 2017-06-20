@@ -48,19 +48,26 @@
 }
 
 #descriptions{
+    height: 30%;
     background-color: black;
     border-top: 2px solid black;
+    position:relative;
 }
 
 .description_container{
     width: 49.5%;
+    height: 100%;
     background-color: silver;
     display: inline-block;
+    position:absolute;
 }
 
 #first_alg_description_div{
-    margin-left: 3px;
-    margin-right: 0.5%;
+    margin-left: 0.15%;
+}
+
+#second_alg_description_div{
+    margin-left: 50.35%;
 }
 
 p {

@@ -22,7 +22,7 @@ $(function()
       var COMPARED_COLOR = "#09f";
       var SINGLE_CHANGE_COLOR = "#f00";
       var SWAP_COLOR = "#2f0";
-      var TEXT_DEFAULT_COLOR = "silver";
+      var TEXT_DEFAULT_COLOR = "C0C0C0";
 
       var ALGORITHMS = {
           "Bubble sort": [bubblesort, BUBBLESORT_PSEUDOCODE_CONTAINER],
