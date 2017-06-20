@@ -15,16 +15,18 @@ $(function()
       var DESRIPTION_CONTAINERS = $(".description_container");
       var PSEUDOCODES_CONTAINER = $("#pseudocodes_container");
       var BUBBLESORT_PSEUDOCODE_CONTAINER = $("#bubblesort_pseudocode_container");
+      var SELECTIONSORT_PSEUDOCODE_CONTAINER = $("#selectionsort_pseudocode_container");
 
       var DEFAULT_COLOR = "#777";
       var SELECTED_COLOR = "#00f";
       var COMPARED_COLOR = "#09f";
       var SINGLE_CHANGE_COLOR = "#f00";
       var SWAP_COLOR = "#2f0";
+      var TEXT_DEFAULT_COLOR = "silver";
 
       var ALGORITHMS = {
           "Bubble sort": [bubblesort, BUBBLESORT_PSEUDOCODE_CONTAINER],
-          "Selection sort": [selectionsort, BUBBLESORT_PSEUDOCODE_CONTAINER],
+          "Selection sort": [selectionsort, SELECTIONSORT_PSEUDOCODE_CONTAINER],
           "Heap sort": [heapsort, BUBBLESORT_PSEUDOCODE_CONTAINER],
           "Quick sort": [quicksort, BUBBLESORT_PSEUDOCODE_CONTAINER],
           "Shell sort": [shellsort, BUBBLESORT_PSEUDOCODE_CONTAINER],
@@ -74,33 +76,35 @@ $(function()
       //HELPER METHODS
       //###########################################################################
 
-      function global_swap(array, alg_actions, first, second)
+      function global_swap(array, alg_actions, first, second, pseudocode_element_id)
       {
           if(first !== second)
           {
-              alg_actions.push([GLOBAL_SWAP_NAME, first, second]);
+              alg_actions.push([GLOBAL_SWAP_NAME, first, second, pseudocode_element_id]);
           }
+
           var t = array[first];
           array[first] = array[second];
           array[second] = t;
       }
 
-      function global_compare(array, alg_actions, first, second)
+      function global_compare(array, alg_actions, first, second, pseudocode_element_id)
       {
           if(first !== second)
           {
-              alg_actions.push([GLOBAL_COMPARE_NAME, first, second]);
+              alg_actions.push([GLOBAL_COMPARE_NAME, first, second, pseudocode_element_id]);
           }
+
           return array[first] > array[second];
       }
 
-      function global_insert(array, alg_actions, index, value)
+      function global_insert(array, alg_actions, index, value, pseudocode_element_id)
       {
           alg_actions.push([GLOBAL_INSERT_NAME, index, value]);
           array[index] = value;
       }
 
-      function global_insert_extend(array, alg_actions, first, second)
+      function global_insert_extend(array, alg_actions, first, second, pseudocode_element_id)
       {
           if(first !== second)
           {
@@ -146,6 +150,16 @@ $(function()
                   }));
               }
           });
+      }
+
+      function take_ids(container)
+      {
+          var ids = [];
+          $(container).children().each(function() {
+              ids.push(this.id);
+          })
+
+          return ids;
       }
 
       //###########################################################################
@@ -198,17 +212,28 @@ $(function()
       {
           var elements_count = array.length;
           var actions = [];
+          var ids = take_ids(BUBBLESORT_PSEUDOCODE_CONTAINER);
 
           for(var i = 0; i < elements_count - 1; i++)
           {
+              actions.push(ids[0]);
+
               for(var j = i + 1; j < elements_count; j++)
               {
-                  if(global_compare(array, alg_actions, i, j))
+                  actions.push(ids[1]);
+
+                  if(global_compare(array, actions, i, j, ids[2]))
                   {
-                      global_swap(array, alg_actions, i, j);
+                      global_swap(array, actions, i, j, ids[3]);
                   }
+
+                  actions.push(ids[4]);
+                  actions.push(ids[5]);
               }
+
+              actions.push(ids[6]);
           }
+
           return actions;
       }
 
@@ -216,18 +241,34 @@ $(function()
       {
           var elements_count = array.length;
           var actions = [];
+          var ids = take_ids(SELECTIONSORT_PSEUDOCODE_CONTAINER);
+
           for(var i = 0; i < elements_count - 1; i++)
           {
+              actions.push(ids[0]);
+              actions.push(ids[1]);
+
               var min_key = i;
+
               for(var j = i + 1; j < elements_count; j++)
               {
-                  if(global_compare(array, actions, min_key, j))
+                  actions.push(ids[2]);
+
+                  if(global_compare(array, actions, min_key, j, ids[3]))
                   {
+                      actions.push(ids[4]);
                       min_key = j;
                   }
+
+                  actions.push(ids[5]);
+                  actions.push(ids[6]);
               }
-              global_swap(array, actions, min_key, i);
+
+              global_swap(array, actions, min_key, i, ids[7]);
+
+              actions.push(ids[8]);
           }
+
           return actions;
       }
 
@@ -423,20 +464,28 @@ $(function()
           var action = action_object[0];
           var first_element;
           var second_element;
+          var pseudocode_element;
 
           if(action === GLOBAL_COMPARE_NAME)
           {
               first_element = $(container).children().eq(action_object[1]);
               second_element = $(container).children().eq(action_object[2]);
+              pseudocode_element = $("#" + action_object[3]);
+
               $(first_element).css("background-color", SELECTED_COLOR);
               $(second_element).css("background-color", COMPARED_COLOR);
+              $(pseudocode_element).css("background-color", COMPARED_COLOR);
           }
           else if(action === GLOBAL_SWAP_NAME)
           {
               first_element = $(container).children().eq(action_object[1]);
               second_element = $(container).children().eq(action_object[2]);
+              pseudocode_element = $("#" + action_object[3]);
+
               $(first_element).css("background-color", SWAP_COLOR);
               $(second_element).css("background-color", SWAP_COLOR);
+              $(pseudocode_element).css("background-color", COMPARED_COLOR);
+
               var t = $(first_element).height();
               $(first_element).height(second_element.height());
               $(second_element).height(t);
@@ -456,11 +505,17 @@ $(function()
               $(second_element).css("background-color", SWAP_COLOR);
               $(first_element).height(second_element.height());
           }
+          else
+          {
+              pseudocode_element = $("#" + action_object);
+              $(pseudocode_element).css("background-color", COMPARED_COLOR);
+          }
 
           window.setTimeout(function()
                             {
                                 $(first_element).css("background-color", DEFAULT_COLOR);
                                 $(second_element).css("background-color", DEFAULT_COLOR);
+                                $(pseudocode_element).css("background-color", TEXT_DEFAULT_COLOR);
                             }, _interval - 100);
       }
 
@@ -533,9 +588,22 @@ $(function()
                                       _elements_to_sort = _array_type_func(ELEMENTS_MIN_VALUE,
                                                                            ELEMENTS_MAX_VALUE,
                                                                            _elements_count);
+
                                       draw_elements(ELEMENTS_CONTAINERS[0], _elements_to_sort, _elements_count);
                                       draw_elements(ELEMENTS_CONTAINERS[1], _elements_to_sort, _elements_count);
                                   });
+
+      $(INTERVAL_SELECT).change(function()
+                                {
+                                    _interval = $(this).val();
+
+                                    _elements_to_sort = _array_type_func(ELEMENTS_MIN_VALUE,
+                                                                         ELEMENTS_MAX_VALUE,
+                                                                         _elements_count);
+
+                                    draw_elements(ELEMENTS_CONTAINERS[0], _elements_to_sort, _elements_count);
+                                    draw_elements(ELEMENTS_CONTAINERS[1], _elements_to_sort, _elements_count);
+                                });
 
       $(START_BUTTON).on("click", function()
       {

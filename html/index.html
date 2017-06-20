@@ -53,13 +53,24 @@
 </div>
 <div id="pseudocodes_container">
     <div id="bubblesort_pseudocode_container">
-        <p id="main_for">&nbsp;&nbsp;&nbsp;&nbsp;for i = 0 to n-1 inclusive do</p>
-        <p id="inner_for">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for j = i + 1 to n inclusive do</p>
-        <p id="compare">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if A[i] > A[j]</p>
-        <p id="swap">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;swap( A[i-1], A[i] )</p>
-        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end if</p>
-        <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end for</p>
-        <p>&nbsp;&nbsp;&nbsp;&nbsp;end for</p>
+        <p id="bubblesort_main_for">&nbsp;&nbsp;&nbsp;&nbsp;for i = 0 to n-1 inclusive do</p>
+        <p id="bubblesort_inner_for">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for j = i + 1 to n inclusive do</p>
+        <p id="bubblesort_compare">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if A[i] > A[j]</p>
+        <p id="bubblesort_swap">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;swap( A[i], A[j] )</p>
+        <p id="bubblesort_end_compare">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end if</p>
+        <p id="bubblesort_end_inner_for">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end for</p>
+        <p id="bubblesort_end_main_for">&nbsp;&nbsp;&nbsp;&nbsp;end for</p>
+    </div>
+    <div id="selectionsort_pseudocode_container">
+        <p id="selectionsort_main_for">&nbsp;&nbsp;&nbsp;&nbsp;for i = 0 to n-1 inclusive do</p>
+        <p id="selectionsort_take_min_key">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var min_key = i</p>
+        <p id="selectionsort_inner_for">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for j = i + 1 to n inclusive do</p>
+        <p id="selectionsort_compare">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if A[min_key] > A[j]</p>
+        <p id="selectionsort_change_min_key">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;min_key = j</p>
+        <p id="selectionsort_end_compare">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end if</p>
+        <p id="selectionsort_end_inner_for">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end for</p>
+        <p id="selectionsort_swap">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;swap( A[min_key], A[i] )</p>
+        <p id="selectionsort_end_main_for">&nbsp;&nbsp;&nbsp;&nbsp;end for</p>
     </div>
 </div>
 </body>
