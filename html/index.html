@@ -53,24 +53,45 @@
 </div>
 <div id="pseudocodes_container">
     <div id="bubblesort_pseudocode_container">
-        <p id="bubblesort_main_for">&nbsp;&nbsp;&nbsp;&nbsp;for i = 0 to n-1 inclusive do</p>
-        <p id="bubblesort_inner_for">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for j = i + 1 to n inclusive do</p>
-        <p id="bubblesort_compare">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if A[i] > A[j]</p>
-        <p id="bubblesort_swap">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;swap( A[i], A[j] )</p>
+        <p id="bubblesort_main_for">&nbsp;&nbsp;&nbsp;&nbsp;for i = 0 to n-1</p>
+        <p id="bubblesort_inner_for">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for j = i + 1 to n</p>
+        <p id="bubblesort_compare">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if array[i] > array[j]</p>
+        <p id="bubblesort_swap">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;swap( array[i], array[j] )</p>
         <p id="bubblesort_end_compare">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end if</p>
         <p id="bubblesort_end_inner_for">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end for</p>
         <p id="bubblesort_end_main_for">&nbsp;&nbsp;&nbsp;&nbsp;end for</p>
     </div>
     <div id="selectionsort_pseudocode_container">
-        <p id="selectionsort_main_for">&nbsp;&nbsp;&nbsp;&nbsp;for i = 0 to n-1 inclusive do</p>
-        <p id="selectionsort_take_min_key">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;var min_key = i</p>
-        <p id="selectionsort_inner_for">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for j = i + 1 to n inclusive do</p>
-        <p id="selectionsort_compare">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if A[min_key] > A[j]</p>
+        <p id="selectionsort_main_for">&nbsp;&nbsp;&nbsp;&nbsp;for i = 0 to n-1</p>
+        <p id="selectionsort_take_min_key">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;min_key = i</p>
+        <p id="selectionsort_inner_for">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for j = i + 1 to n</p>
+        <p id="selectionsort_compare">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if array[min_key] > array[j]</p>
         <p id="selectionsort_change_min_key">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;min_key = j</p>
         <p id="selectionsort_end_compare">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end if</p>
         <p id="selectionsort_end_inner_for">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end for</p>
-        <p id="selectionsort_swap">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;swap( A[min_key], A[i] )</p>
+        <p id="selectionsort_swap">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;swap( array[min_key], array[i] )</p>
         <p id="selectionsort_end_main_for">&nbsp;&nbsp;&nbsp;&nbsp;end for</p>
+    </div>
+    <div id="quicksort_pseudocode_container">
+        <p id="quicksort_partition">&nbsp;&nbsp;&nbsp;&nbsp;function partition(array, pivot, left, right)</p>
+        <p id="quicksort_partition_take_partition_index">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;partitionIndex = left</p>
+        <p id="quicksort_partition_for">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for i = left to right</p>
+        <p id="quicksort_partition_compare">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if array[pivot] > array[i]</p>
+        <p id="quicksort_partition_inner_swap">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;swap( array[i], array[partitionIndex] )</p>
+        <p id="quicksort_partition_increase_partition_index">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;partitionIndex++</p>
+        <p id="quicksort_partition_end_id">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end if</p>
+        <p id="quicksort_partition_end_for">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end for</p>
+        <p id="quicksort_partition_main_swap">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;swap( array[right], array[partitionIndex])</p>
+        <p id="quicksort_partition_return">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return partitionIndex</p>
+        <p id="quicksort_partition_end">&nbsp;&nbsp;&nbsp;&nbsp;end function</p>
+        <br>
+        <p id="quicksort_func_">&nbsp;&nbsp;&nbsp;&nbsp;function quicksort(array, left, right)</p>
+        <p id="quicksort_func_compare">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if left < right</p>
+        <p id="quicksort_func_take_partition_index">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;partitionIndex = partition(array, right, left, right)</p>
+        <p id="quicksort_func_first_recursive">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;quicksort(array, left, partitionIndex - 1)</p>
+        <p id="quicksort_func_second_recursive">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;quicksort(array, partitionIndex + 1, right)</p>
+        <p id="quicksort_func_end_if">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end if</p>
+        <p id="quicksort_func_end">&nbsp;&nbsp;&nbsp;&nbsp;end function</p>
     </div>
 </div>
 </body>
