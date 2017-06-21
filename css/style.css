@@ -47,19 +47,20 @@
     bottom: 0;
 }
 
-#descriptions{
+#informations_container{
     min-height: 475px;
     background-color: black;
     border-top: 2px solid black;
     position:relative;
 }
 
-.description_container{
+.info_container{
     width: 49.5%;
     min-height: 475px;
     background-color: silver;
     display: inline-block;
     position:absolute;
+    padding-left: 15px;
 }
 
 #first_alg_description_div{
@@ -76,7 +77,7 @@ p {
     font-family: "Arial", Arial, sans-serif;
 }
 
-#pseudocodes_container{
+#pseudocodes_container, #descriptions_container{
     display: none;
 }
 

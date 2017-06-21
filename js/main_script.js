@@ -12,11 +12,17 @@ $(function()
       var ARRAY_TYPE_SELECT = $("#array_type_select");
       var INTERVAL_SELECT = $("#interval_select");
       var ELEMENTS_CONTAINERS = $(".element_container");
-      var DESRIPTION_CONTAINERS = $(".description_container");
+      var INFO_CONTAINERS = $(".info_container");
+
       var PSEUDOCODES_CONTAINER = $("#pseudocodes_container");
       var BUBBLESORT_PSEUDOCODE_CONTAINER = $("#bubblesort_pseudocode_container");
       var SELECTIONSORT_PSEUDOCODE_CONTAINER = $("#selectionsort_pseudocode_container");
       var QUICKSORT_PSEUDOCODE_CONTAINER = $("#quicksort_pseudocode_container");
+
+      var DESCRIPTIONS_CONTAINER = $("#descriptions_container");
+      var BUBBLESORT_DESCRIPTIONS_CONTAINER = $("#bubblesort_descriptions_container");
+      var SELECTIONSORT_DESCRIPTIONS_CONTAINER = $("#selectionsort_descriptions_container");
+      var QUICKSORT_DESCRIPTIONS_CONTAINER = $("#quicksort_descriptions_container");
 
       var DEFAULT_COLOR = "#777";
       var SELECTED_COLOR = "#00f";
@@ -25,14 +31,31 @@ $(function()
       var SWAP_COLOR = "#2f0";
       var TEXT_DEFAULT_COLOR = "#C0C0C0";
 
-      var ALGORITHMS = {
-          "Bubble sort": [bubblesort, BUBBLESORT_PSEUDOCODE_CONTAINER],
-          "Selection sort": [selectionsort, SELECTIONSORT_PSEUDOCODE_CONTAINER],
-          "Heap sort": [heapsort, QUICKSORT_PSEUDOCODE_CONTAINER],
-          "Quick sort": [quicksort, QUICKSORT_PSEUDOCODE_CONTAINER],
-          "Shell sort": [shellsort, BUBBLESORT_PSEUDOCODE_CONTAINER],
-          "Insertion sort": [insertionsort, BUBBLESORT_PSEUDOCODE_CONTAINER]
+      var BUBBLESORT_OBJECT = {
+          func: bubblesort,
+          description_container: BUBBLESORT_DESCRIPTIONS_CONTAINER,
+          pseudocode_container: BUBBLESORT_PSEUDOCODE_CONTAINER
       };
+      var SELECTION_OBJECT = {
+          func: selectionsort,
+          description_container: SELECTIONSORT_DESCRIPTIONS_CONTAINER,
+          pseudocode_container: SELECTIONSORT_PSEUDOCODE_CONTAINER
+      };
+      var QUICKSORT_OBJECT = {
+          func: quicksort,
+          description_container: QUICKSORT_DESCRIPTIONS_CONTAINER,
+          pseudocode_container: QUICKSORT_PSEUDOCODE_CONTAINER
+      };
+
+      var ALGORITHMS = {
+          "Bubble sort": BUBBLESORT_OBJECT,
+          "Selection sort": SELECTION_OBJECT,
+          "Quick sort": QUICKSORT_OBJECT
+      };
+      /*   "Heap sort": [heapsort, QUICKSORT_PSEUDOCODE_CONTAINER],
+       "Shell sort": [shellsort, BUBBLESORT_PSEUDOCODE_CONTAINER],
+       "Insertion sort": [insertionsort, BUBBLESORT_PSEUDOCODE_CONTAINER]
+       };*/
       var ARRAY_TYPES = {
           "Random": random_numbers,
           "Reversed": revers_sorted,
@@ -57,12 +80,10 @@ $(function()
       var _second_alg_selected = "Selection sort";
       var _array_types_select = "Random";
 
-      var _first_sorting_alg_func = ALGORITHMS[_first_alg_selected][0];
-      var _second_sorting_alg_func = ALGORITHMS[_second_alg_selected][0];
-      var _array_type_func = ARRAY_TYPES[_array_types_select];
+      var _first_alg_object = ALGORITHMS[_first_alg_selected];
+      var _second_alg_object = ALGORITHMS[_second_alg_selected];
 
-      var _first_sorting_alg_pseudocode_container = ALGORITHMS[_first_alg_selected][1];
-      var _second_sorting_alg_pseudocode_container = ALGORITHMS[_second_alg_selected][1];
+      var _array_type_func = ARRAY_TYPES[_array_types_select];
 
       var _elements_count = parseInt($(ELEMENTS_COUNT_SELECT).val(), 10);
       var _elements_to_sort = _array_type_func(ELEMENTS_MIN_VALUE, ELEMENTS_MAX_VALUE, _elements_count);
@@ -156,11 +177,27 @@ $(function()
       function take_ids(container)
       {
           var ids = [];
-          $(container).children().each(function() {
-              ids.push(this.id);
-          })
+          $(container).children().each(function()
+                                       {
+                                           ids.push(this.id);
+                                       });
 
           return ids;
+      }
+
+      function refresh_content()
+      {
+          _elements_to_sort = _array_type_func(ELEMENTS_MIN_VALUE,
+                                               ELEMENTS_MAX_VALUE,
+                                               _elements_count);
+          $(INFO_CONTAINERS[0]).empty();
+          $(INFO_CONTAINERS[1]).empty();
+
+          $(INFO_CONTAINERS[0]).append(_first_alg_object.description_container);
+          $(INFO_CONTAINERS[1]).append(_second_alg_object.description_container);
+
+          draw_elements(ELEMENTS_CONTAINERS[0], _elements_to_sort, _elements_count);
+          draw_elements(ELEMENTS_CONTAINERS[1], _elements_to_sort, _elements_count);
       }
 
       //###########################################################################
@@ -555,19 +592,16 @@ $(function()
       $(ELEMENTS_COUNT_SELECT).change(function()
                                       {
                                           _elements_count = parseInt($(this).val(), 10);
-                                          _elements_to_sort = _array_type_func(ELEMENTS_MIN_VALUE,
-                                                                               ELEMENTS_MAX_VALUE,
-                                                                               _elements_count);
 
-                                          draw_elements(ELEMENTS_CONTAINERS[0], _elements_to_sort, _elements_count);
-                                          draw_elements(ELEMENTS_CONTAINERS[1], _elements_to_sort, _elements_count);
+                                          refresh_content();
                                       });
 
       $(FIRST_ALG_SELECT).change(function()
                                  {
                                      var alg_name = $(this).val();
-                                     var selector = "#" + $(SECOND_ALG_SELECT).attr("id") + " option[value='"+ alg_name +"']";
-                                     _first_sorting_alg_func = ALGORITHMS[alg_name][0];
+                                     var selector = "#" + $(SECOND_ALG_SELECT).attr("id") + " option[value='" + alg_name
+                                         + "']";
+                                     _first_alg_object = ALGORITHMS[alg_name];
 
                                      $(selector).remove();
                                      $(SECOND_ALG_SELECT).append($("<option>", {
@@ -577,13 +611,12 @@ $(function()
 
                                      _first_alg_selected = alg_name;
 
-                                     $(DESRIPTION_CONTAINERS[0]).empty();
-                                     $(DESRIPTION_CONTAINERS[0]).append(ALGORITHMS[alg_name][1]);
+                                     $(INFO_CONTAINERS[0]).empty();
+                                     $(INFO_CONTAINERS[0]).append(_first_alg_object.description_container);
 
                                      if(_had_been_started)
                                      {
-                                         draw_elements(ELEMENTS_CONTAINERS[0], _elements_to_sort, _elements_count);
-                                         draw_elements(ELEMENTS_CONTAINERS[1], _elements_to_sort, _elements_count);
+                                         refresh_content();
 
                                          _had_been_started = false;
                                      }
@@ -592,8 +625,9 @@ $(function()
       $(SECOND_ALG_SELECT).change(function()
                                   {
                                       var alg_name = $(this).val();
-                                      var selector = "#" + $(FIRST_ALG_SELECT).attr("id") + " option[value='"+ alg_name +"']";
-                                      _second_sorting_alg_func = ALGORITHMS[alg_name][0];
+                                      var selector = "#" + $(FIRST_ALG_SELECT).attr("id") + " option[value='" + alg_name
+                                          + "']";
+                                      _second_alg_object = ALGORITHMS[alg_name];
 
                                       $(selector).remove();
                                       $(FIRST_ALG_SELECT).append($("<option>", {
@@ -603,13 +637,12 @@ $(function()
 
                                       _second_alg_selected = alg_name;
 
-                                      $(DESRIPTION_CONTAINERS[1]).empty();
-                                      $(DESRIPTION_CONTAINERS[1]).append(ALGORITHMS[alg_name][1]);
+                                      $(INFO_CONTAINERS[1]).empty();
+                                      $(INFO_CONTAINERS[1]).append(_second_alg_object.description_container);
 
                                       if(_had_been_started)
                                       {
-                                          draw_elements(ELEMENTS_CONTAINERS[0], _elements_to_sort, _elements_count);
-                                          draw_elements(ELEMENTS_CONTAINERS[1], _elements_to_sort, _elements_count);
+                                          refresh_content();
 
                                           _had_been_started = false;
                                       }
@@ -620,24 +653,19 @@ $(function()
                                       var arr_type = $(this).val();
                                       _array_type_func = ARRAY_TYPES[arr_type];
 
-                                      _elements_to_sort = _array_type_func(ELEMENTS_MIN_VALUE,
-                                                                           ELEMENTS_MAX_VALUE,
-                                                                           _elements_count);
-
-                                      draw_elements(ELEMENTS_CONTAINERS[0], _elements_to_sort, _elements_count);
-                                      draw_elements(ELEMENTS_CONTAINERS[1], _elements_to_sort, _elements_count);
+                                      refresh_content();
                                   });
 
       $(INTERVAL_SELECT).change(function()
                                 {
                                     _interval = $(this).val();
 
-                                    _elements_to_sort = _array_type_func(ELEMENTS_MIN_VALUE,
-                                                                         ELEMENTS_MAX_VALUE,
-                                                                         _elements_count);
+                                    if(_had_been_started)
+                                    {
+                                        refresh_content();
 
-                                    draw_elements(ELEMENTS_CONTAINERS[0], _elements_to_sort, _elements_count);
-                                    draw_elements(ELEMENTS_CONTAINERS[1], _elements_to_sort, _elements_count);
+                                        _had_been_started = false;
+                                    }
                                 });
 
       $(START_BUTTON).on("click", function()
@@ -645,8 +673,14 @@ $(function()
           lock_dom_elements(true);
 
           var _elements_to_sort_copy = _elements_to_sort.slice();
-          var first_alg_actions = _first_sorting_alg_func(_elements_to_sort);
-          var second_alg_actions = _second_sorting_alg_func(_elements_to_sort_copy);
+          var first_alg_actions = _first_alg_object.func(_elements_to_sort);
+          var second_alg_actions = _second_alg_object.func(_elements_to_sort_copy);
+
+          $(INFO_CONTAINERS[0]).empty();
+          $(INFO_CONTAINERS[1]).empty();
+
+          $(INFO_CONTAINERS[0]).append(_first_alg_object.pseudocode_container);
+          $(INFO_CONTAINERS[1]).append(_second_alg_object.pseudocode_container);
 
           _first_setInterval_id = window.setInterval(function()
                                                      {
@@ -687,10 +721,7 @@ $(function()
       });
 
       $(PSEUDOCODES_CONTAINER).empty();
+      $(DESCRIPTIONS_CONTAINER).empty();
 
-      $(DESRIPTION_CONTAINERS[0]).append(_first_sorting_alg_pseudocode_container);
-      $(DESRIPTION_CONTAINERS[1]).append(_second_sorting_alg_pseudocode_container);
-
-      draw_elements(ELEMENTS_CONTAINERS[0], _elements_to_sort, _elements_count);
-      draw_elements(ELEMENTS_CONTAINERS[1], _elements_to_sort, _elements_count);
+      refresh_content();
   });
