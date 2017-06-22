@@ -24,6 +24,11 @@ $(function()
       var SELECTIONSORT_DESCRIPTIONS_CONTAINER = $("#selectionsort_descriptions_container");
       var QUICKSORT_DESCRIPTIONS_CONTAINER = $("#quicksort_descriptions_container");
 
+      var PERFORMANCES_CONTAINER = $("#performances_container");
+      var BUBBLESORT_PERFORFORMANCE_CONTAINER = $("#bubblesort_performance_container");
+      var SELECTIONSORT_PERFORFORMANCE_CONTAINER = $("#selectionsort_performance_container");
+      var QUICKSORT_PERFORFORMANCE_CONTAINER = $("#quicksort_performance_container");
+
       var DEFAULT_COLOR = "#777";
       var SELECTED_COLOR = "#00f";
       var COMPARED_COLOR = "#09f";
@@ -34,17 +39,20 @@ $(function()
       var BUBBLESORT_OBJECT = {
           func: bubblesort,
           description_container: BUBBLESORT_DESCRIPTIONS_CONTAINER,
-          pseudocode_container: BUBBLESORT_PSEUDOCODE_CONTAINER
+          pseudocode_container: BUBBLESORT_PSEUDOCODE_CONTAINER,
+          performance_container: BUBBLESORT_PERFORFORMANCE_CONTAINER
       };
       var SELECTION_OBJECT = {
           func: selectionsort,
           description_container: SELECTIONSORT_DESCRIPTIONS_CONTAINER,
-          pseudocode_container: SELECTIONSORT_PSEUDOCODE_CONTAINER
+          pseudocode_container: SELECTIONSORT_PSEUDOCODE_CONTAINER,
+          performance_container: SELECTIONSORT_PERFORFORMANCE_CONTAINER
       };
       var QUICKSORT_OBJECT = {
           func: quicksort,
           description_container: QUICKSORT_DESCRIPTIONS_CONTAINER,
-          pseudocode_container: QUICKSORT_PSEUDOCODE_CONTAINER
+          pseudocode_container: QUICKSORT_PSEUDOCODE_CONTAINER,
+          performance_container: QUICKSORT_PERFORFORMANCE_CONTAINER
       };
 
       var ALGORITHMS = {
@@ -250,19 +258,24 @@ $(function()
       {
           var elements_count = array.length;
           var actions = [];
+          var steps_count = 0;
           var ids = take_ids(BUBBLESORT_PSEUDOCODE_CONTAINER);
 
           for(var i = 0; i < elements_count - 1; i++)
           {
               actions.push(ids[0]);
+              steps_count++;
 
               for(var j = i + 1; j < elements_count; j++)
               {
                   actions.push(ids[1]);
+                  steps_count++;
+                  steps_count++;
 
                   if(global_compare(array, actions, i, j, ids[2]))
                   {
                       global_swap(array, actions, i, j, ids[3]);
+                      steps_count++;
                   }
 
                   actions.push(ids[4]);
@@ -272,29 +285,36 @@ $(function()
               actions.push(ids[6]);
           }
 
-          return actions;
+          return [actions, steps_count];
       }
 
       function selectionsort(array)
       {
           var elements_count = array.length;
           var actions = [];
+          var steps_count = 0;
           var ids = take_ids(SELECTIONSORT_PSEUDOCODE_CONTAINER);
 
           for(var i = 0; i < elements_count - 1; i++)
           {
               actions.push(ids[0]);
+              steps_count++;
               actions.push(ids[1]);
+              steps_count++;
 
               var min_key = i;
 
               for(var j = i + 1; j < elements_count; j++)
               {
                   actions.push(ids[2]);
+                  steps_count++;
+                  steps_count++;
 
                   if(global_compare(array, actions, min_key, j, ids[3]))
                   {
                       actions.push(ids[4]);
+                      steps_count++;
+
                       min_key = j;
                   }
 
@@ -303,34 +323,41 @@ $(function()
               }
 
               global_swap(array, actions, min_key, i, ids[7]);
+              steps_count++;
 
               actions.push(ids[8]);
           }
 
-          return actions;
+          return [actions, steps_count];
       }
 
       function quicksort(array)
       {
           var actions = [];
+          var steps_count = 0;
           var ids = take_ids(QUICKSORT_PSEUDOCODE_CONTAINER);
 
           function partition(arr, pivot, left, right)
           {
               actions.push(ids[0]);
               actions.push(ids[1]);
+              steps_count++;
 
               var partitionIndex = left;
 
               for(var i = left; i < right; i++)
               {
                   actions.push(ids[2]);
+                  steps_count++;
+                  steps_count++;
 
                   if(global_compare(arr, actions, pivot, i, ids[3]))
                   {
                       global_swap(arr, actions, i, partitionIndex, ids[4]);
+                      steps_count++;
 
                       actions.push(ids[5]);
+                      steps_count++;
 
                       partitionIndex++;
                   }
@@ -340,8 +367,10 @@ $(function()
               }
 
               global_swap(arr, actions, right, partitionIndex, ids[8]);
+              steps_count++;
 
               actions.push(ids[9]);
+              steps_count++;
               actions.push(ids[10]);
 
               return partitionIndex;
@@ -351,18 +380,22 @@ $(function()
           {
               actions.push(ids[11]);
               actions.push(ids[12]);
+              steps_count++;
 
               if(left < right)
               {
                   actions.push(ids[13]);
+                  steps_count++;
 
                   var partitionIndex = partition(arr, right, left, right);
 
                   actions.push(ids[14]);
+                  steps_count++;
 
                   do_quicksort(arr, left, partitionIndex - 1);
 
                   actions.push(ids[15]);
+                  steps_count++;
 
                   do_quicksort(arr, partitionIndex + 1, right);
 
@@ -374,7 +407,7 @@ $(function()
 
           do_quicksort(array, 0, array.length - 1);
 
-          return actions;
+          return [actions, steps_count];
       }
 
       function heapsort(array)
@@ -673,14 +706,27 @@ $(function()
           lock_dom_elements(true);
 
           var _elements_to_sort_copy = _elements_to_sort.slice();
-          var first_alg_actions = _first_alg_object.func(_elements_to_sort);
-          var second_alg_actions = _second_alg_object.func(_elements_to_sort_copy);
+
+          var first_alg_result = _first_alg_object.func(_elements_to_sort);
+          var second_alg_result = _second_alg_object.func(_elements_to_sort_copy);
+
+          var first_alg_actions = first_alg_result[0];
+          var second_alg_actions = second_alg_result[0];
+
+          var first_alg_steps_count = first_alg_result[1];
+          var second_alg_steps_count = second_alg_result[1];
+
+          $(_first_alg_object.performance_container).children().last().empty().append("<p>Steps Made: "+first_alg_steps_count+"</p>");
+          $(_second_alg_object.performance_container).children().last().empty().append("<p>Steps Made: "+second_alg_steps_count+"</p>");
 
           $(INFO_CONTAINERS[0]).empty();
           $(INFO_CONTAINERS[1]).empty();
 
           $(INFO_CONTAINERS[0]).append(_first_alg_object.pseudocode_container);
+          $(INFO_CONTAINERS[0]).append(_first_alg_object.performance_container);
+
           $(INFO_CONTAINERS[1]).append(_second_alg_object.pseudocode_container);
+          $(INFO_CONTAINERS[1]).append(_second_alg_object.performance_container);
 
           _first_setInterval_id = window.setInterval(function()
                                                      {
@@ -722,6 +768,7 @@ $(function()
 
       $(PSEUDOCODES_CONTAINER).empty();
       $(DESCRIPTIONS_CONTAINER).empty();
+      $(PERFORMANCES_CONTAINER).empty();
 
       refresh_content();
   });

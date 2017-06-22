@@ -63,6 +63,12 @@
     padding-left: 15px;
 }
 
+.info_container div{
+    display: inline-block;
+    margin-left: 15px;
+    vertical-align:top;
+}
+
 #first_alg_description_div{
     margin-left: 0.15%;
 }
@@ -77,7 +83,7 @@ p {
     font-family: "Arial", Arial, sans-serif;
 }
 
-#pseudocodes_container, #descriptions_container{
+#pseudocodes_container, #descriptions_container, #performances_container{
     display: none;
 }
 
