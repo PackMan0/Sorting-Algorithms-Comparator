@@ -45,7 +45,7 @@ $(function()
           pseudocode_container: BUBBLESORT_PSEUDOCODE_CONTAINER,
           performance_container: BUBBLESORT_PERFORFORMANCE_CONTAINER
       };
-      var SELECTION_OBJECT = {
+      var SELECTIONSORT_OBJECT = {
           func: selectionsort,
           description_container: SELECTIONSORT_DESCRIPTIONS_CONTAINER,
           pseudocode_container: SELECTIONSORT_PSEUDOCODE_CONTAINER,
@@ -66,7 +66,7 @@ $(function()
 
       var ALGORITHMS = {
           "Bubble sort": BUBBLESORT_OBJECT,
-          "Selection sort": SELECTION_OBJECT,
+          "Selection sort": SELECTIONSORT_OBJECT,
           "Quick sort": QUICKSORT_OBJECT,
           "Shell sort": SHELLSORT_OBJECT
       };
@@ -302,7 +302,7 @@ $(function()
           var elements_count = array.length;
           var actions = [];
           var steps_count = 0;
-          var ids = take_ids(SELECTION_OBJECT.pseudocode_container);
+          var ids = take_ids(SELECTIONSORT_OBJECT.pseudocode_container);
 
           for(var i = 0; i < elements_count - 1; i++)
           {
@@ -519,7 +519,7 @@ $(function()
               gap = Math.round(gap * 5 / 11);
               steps_count++;
           }
-          
+
           return [actions, steps_count];
       }
 
