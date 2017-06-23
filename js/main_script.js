@@ -19,18 +19,21 @@ $(function()
       var SELECTIONSORT_PSEUDOCODE_CONTAINER = $("#selectionsort_pseudocode_container");
       var QUICKSORT_PSEUDOCODE_CONTAINER = $("#quicksort_pseudocode_container");
       var SHELLSORT_PSEUDOCODE_CONTAINER = $("#shellsort_pseudocode_container");
+      var INSERTATIONSORT_PSEUDOCODE_CONTAINER = $("#insertationsort_pseudocode_container");
 
       var DESCRIPTIONS_CONTAINER = $("#descriptions_container");
       var BUBBLESORT_DESCRIPTIONS_CONTAINER = $("#bubblesort_descriptions_container");
       var SELECTIONSORT_DESCRIPTIONS_CONTAINER = $("#selectionsort_descriptions_container");
       var QUICKSORT_DESCRIPTIONS_CONTAINER = $("#quicksort_descriptions_container");
       var SHELLSORT_DESCRIPTION_CONTAINER = $("#shellsort_description_container");
+      var INSERTATIONSORT_DESCRIPTION_CONTAINER = $("#insertationsort_description_container");
 
       var PERFORMANCES_CONTAINER = $("#performances_container");
       var BUBBLESORT_PERFORFORMANCE_CONTAINER = $("#bubblesort_performance_container");
       var SELECTIONSORT_PERFORFORMANCE_CONTAINER = $("#selectionsort_performance_container");
       var QUICKSORT_PERFORFORMANCE_CONTAINER = $("#quicksort_performance_container");
       var SHELLSORT_PERFORMANCE_CONTAINER = $("#shellsort_performance_Container");
+      var INSERTATIONSORT_PERFORMANCE_CONTAINER = $("#insertationsort_performance_Container");
 
       var DEFAULT_COLOR = "#777";
       var SELECTED_COLOR = "#00f";
@@ -63,16 +66,21 @@ $(function()
           pseudocode_container: SHELLSORT_PSEUDOCODE_CONTAINER,
           performance_container: SHELLSORT_PERFORMANCE_CONTAINER
       };
+      var INSERTATIONSORT_OBJECT = {
+          func: insertionsort,
+          description_container: INSERTATIONSORT_DESCRIPTION_CONTAINER,
+          pseudocode_container: INSERTATIONSORT_PSEUDOCODE_CONTAINER,
+          performance_container: INSERTATIONSORT_PERFORMANCE_CONTAINER
+      };
 
       var ALGORITHMS = {
           "Bubble sort": BUBBLESORT_OBJECT,
           "Selection sort": SELECTIONSORT_OBJECT,
           "Quick sort": QUICKSORT_OBJECT,
-          "Shell sort": SHELLSORT_OBJECT
+          "Shell sort": SHELLSORT_OBJECT,
+          "Insertion sort": INSERTATIONSORT_OBJECT
       };
-      /*   "Heap sort": [heapsort, QUICKSORT_PSEUDOCODE_CONTAINER],
-       "Shell sort": [shellsort, BUBBLESORT_PSEUDOCODE_CONTAINER],
-       "Insertion sort": [insertionsort, BUBBLESORT_PSEUDOCODE_CONTAINER]
+      /*   "Heap sort": [heapsort, QUICKSORT_PSEUDOCODE_CONTAINER]
        };*/
       var ARRAY_TYPES = {
           "Random": random_numbers,
@@ -83,7 +91,6 @@ $(function()
       var GLOBAL_SWAP_NAME = "swap";
       var GLOBAL_COMPARE_NAME = "compare";
       var GLOBAL_INSERT_NAME = "insert";
-      var GLOBAL_INSERT_EXTEND_NAME = "insert_extend";
 
       var SPACING = 3;
       var ELEMENTS_CONTAINERS_WIDTH = $(ELEMENTS_CONTAINERS[0]).width();
@@ -196,7 +203,10 @@ $(function()
           var ids = [];
           $(container).children().each(function()
                                        {
-                                           ids.push(this.id);
+                                           if(this.id.length > 0)
+                                           {
+                                               ids.push(this.id);
+                                           }
                                        });
 
           return ids;
@@ -215,6 +225,21 @@ $(function()
 
           draw_elements(ELEMENTS_CONTAINERS[0], _elements_to_sort, _elements_count);
           draw_elements(ELEMENTS_CONTAINERS[1], _elements_to_sort, _elements_count);
+      }
+
+      function steps_count(actions)
+      {
+          var steps_count = [];
+
+          $(actions).each(function()
+                                       {
+                                           if(this.indexOf("end") === -1)
+                                           {
+                                               steps_count++;
+                                           }
+                                       });
+
+          return steps_count;
       }
 
       //###########################################################################
@@ -267,119 +292,99 @@ $(function()
       {
           var elements_count = array.length;
           var actions = [];
-          var steps_count = 0;
-          var ids = take_ids(BUBBLESORT_OBJECT.performance_container);
+          var ids = take_ids(BUBBLESORT_OBJECT.pseudocode_container);
 
           for(var i = 0; i < elements_count - 1; i++)
           {
               actions.push(ids[0]);
-              steps_count++;
 
               for(var j = i + 1; j < elements_count; j++)
               {
                   actions.push(ids[1]);
-                  steps_count++;
-                  steps_count++;
 
                   if(global_compare(array, actions, i, j, ids[2]))
                   {
                       global_swap(array, actions, i, j, ids[3]);
-                      steps_count++;
-                  }
 
-                  actions.push(ids[4]);
+                      actions.push(ids[4]);
+                  }
                   actions.push(ids[5]);
               }
 
               actions.push(ids[6]);
           }
 
-          return [actions, steps_count];
+          return [actions, steps_count(actions)];
       }
 
       function selectionsort(array)
       {
           var elements_count = array.length;
           var actions = [];
-          var steps_count = 0;
           var ids = take_ids(SELECTIONSORT_OBJECT.pseudocode_container);
 
           for(var i = 0; i < elements_count - 1; i++)
           {
               actions.push(ids[0]);
-              steps_count++;
-              actions.push(ids[1]);
-              steps_count++;
 
               var min_key = i;
+              actions.push(ids[1]);
 
               for(var j = i + 1; j < elements_count; j++)
               {
                   actions.push(ids[2]);
-                  steps_count++;
-                  steps_count++;
 
                   if(global_compare(array, actions, min_key, j, ids[3]))
                   {
-                      actions.push(ids[4]);
-                      steps_count++;
-
                       min_key = j;
+                      actions.push(ids[4]);
+
+                      actions.push(ids[5]);
                   }
 
-                  actions.push(ids[5]);
                   actions.push(ids[6]);
               }
 
               global_swap(array, actions, min_key, i, ids[7]);
-              steps_count++;
 
               actions.push(ids[8]);
           }
 
-          return [actions, steps_count];
+          return [actions, steps_count(actions)];
       }
 
       function quicksort(array)
       {
           var actions = [];
-          var steps_count = 0;
           var ids = take_ids(QUICKSORT_OBJECT.pseudocode_container);
 
           function partition(arr, pivot, left, right)
           {
               actions.push(ids[0]);
-              actions.push(ids[1]);
-              steps_count++;
 
               var partitionIndex = left;
+              actions.push(ids[1]);
 
               for(var i = left; i < right; i++)
               {
                   actions.push(ids[2]);
-                  steps_count++;
-                  steps_count++;
 
                   if(global_compare(arr, actions, pivot, i, ids[3]))
                   {
                       global_swap(arr, actions, i, partitionIndex, ids[4]);
-                      steps_count++;
-
-                      actions.push(ids[5]);
-                      steps_count++;
 
                       partitionIndex++;
+                      actions.push(ids[5]);
+
+                      actions.push(ids[6]);
                   }
 
-                  actions.push(ids[6]);
                   actions.push(ids[7]);
               }
 
               global_swap(arr, actions, right, partitionIndex, ids[8]);
-              steps_count++;
 
               actions.push(ids[9]);
-              steps_count++;
               actions.push(ids[10]);
 
               return partitionIndex;
@@ -389,22 +394,18 @@ $(function()
           {
               actions.push(ids[11]);
               actions.push(ids[12]);
-              steps_count++;
 
               if(left < right)
               {
                   actions.push(ids[13]);
-                  steps_count++;
 
                   var partitionIndex = partition(arr, right, left, right);
 
                   actions.push(ids[14]);
-                  steps_count++;
 
                   do_quicksort(arr, left, partitionIndex - 1);
 
                   actions.push(ids[15]);
-                  steps_count++;
 
                   do_quicksort(arr, partitionIndex + 1, right);
 
@@ -469,74 +470,78 @@ $(function()
       function shellsort(array)
       {
           var actions = [];
-          var gap = Math.round(array.length / 2);
-          var steps_count = 0;
           var ids = take_ids(SHELLSORT_OBJECT.pseudocode_container);
 
+          var gap = Math.round(array.length / 2);
           actions.push(ids[0]);
-          steps_count++;
 
           while(gap > 0)
           {
               actions.push(ids[1]);
-              steps_count++;
 
               for(var i = gap; i < array.length; i++)
               {
                   actions.push(ids[2]);
-                  steps_count++;
-                  actions.push(ids[3]);
-                  steps_count++;
-                  actions.push(ids[4]);
-                  steps_count++;
 
                   var temp = array[i];
+                  actions.push(ids[3]);
+
                   var j = i;
+                  actions.push(ids[4]);
 
                   while(j >= gap && array[j - gap] > temp)
                   {
                       actions.push(ids[5]);
-                      steps_count++;
-                      global_insert(array, actions, j, array[j - gap], ids[6]);
-                      steps_count++;
 
-                      actions.push(ids[7]);
-                      steps_count++;
+                      global_insert(array, actions, j, array[j - gap], ids[6]);
+
                       j = j - gap;
+                      actions.push(ids[7]);
+
+                      actions.push(ids[8]);
                   }
 
-                  actions.push(ids[8]);
-
                   global_insert(array, actions, j, temp, ids[9]);
-                  steps_count++;
 
                   actions.push(ids[10]);
               }
 
-              actions.push(ids[11]);
-              actions.push(ids[12]);
-
               gap = Math.round(gap * 5 / 11);
-              steps_count++;
+              actions.push(ids[11]);
+
+              actions.push(ids[12]);
           }
 
-          return [actions, steps_count];
+          return [actions, steps_count(actions)];
       }
 
       function insertionsort(array)
       {
-          var elements_count = array.length;
           var actions = [];
-          for(var i = 1; i < elements_count; i++)
+          var ids = take_ids(INSERTATIONSORT_OBJECT.pseudocode_container);
+
+          for(var i = 1; i < array.length; i++)
           {
-              var tmp = array[i];
-              for(var j = i - 1; j >= 0 && (array[j] > tmp); j--)
+              actions.push(ids[0]);
+
+              var temp = array[i];
+              actions.push(ids[1]);
+
+              for(var j = i - 1; j >= 0 && (array[j] > temp); j--)
               {
-                  global_insert_extend(array, actions, j + 1, j);
+                  actions.push(ids[2]);
+
+                  global_insert(array, actions, j + 1, array[j], ids[3]);
+
+                  actions.push(ids[4]);
               }
-              global_insert(array, actions, j + 1, tmp);
+
+              global_insert(array, actions, j + 1, temp, ids[5]);
+
+              actions.push(ids[6]);
           }
-          return actions;
+
+          return [actions, steps_count(actions)];
       }
 
       //###########################################################################
@@ -637,14 +642,14 @@ $(function()
               $(first_element).height(value);
               $(pseudocode_element).css("background-color", SINGLE_CHANGE_COLOR);
           }
-          else if(action === GLOBAL_INSERT_EXTEND_NAME)
+          /*else if(action === GLOBAL_INSERT_EXTEND_NAME)
           {
               first_element = $(container).children().eq(action_object[1]);
               second_element = $(container).children().eq(action_object[2]);
               $(first_element).css("background-color", SWAP_COLOR);
               $(second_element).css("background-color", SWAP_COLOR);
               $(first_element).height(second_element.height());
-          }
+          }*/
           else
           {
               pseudocode_element = $("#" + action_object);
@@ -744,6 +749,13 @@ $(function()
 
       $(START_BUTTON).on("click", function()
       {
+          if(_had_been_started)
+          {
+              refresh_content();
+
+              _had_been_started = false;
+          }
+
           lock_dom_elements(true);
 
           var _elements_to_sort_copy = _elements_to_sort.slice();
@@ -796,8 +808,6 @@ $(function()
 
       populate_first_alg_select();
       populate_second_alg_select();
-
-      $(STOP_BUTTON).attr("disabled", true);
 
       $.each(ARRAY_TYPES, function(key, value)
       {
