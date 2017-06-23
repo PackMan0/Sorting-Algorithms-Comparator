@@ -18,16 +18,19 @@ $(function()
       var BUBBLESORT_PSEUDOCODE_CONTAINER = $("#bubblesort_pseudocode_container");
       var SELECTIONSORT_PSEUDOCODE_CONTAINER = $("#selectionsort_pseudocode_container");
       var QUICKSORT_PSEUDOCODE_CONTAINER = $("#quicksort_pseudocode_container");
+      var SHELLSORT_PSEUDOCODE_CONTAINER = $("#shellsort_pseudocode_container");
 
       var DESCRIPTIONS_CONTAINER = $("#descriptions_container");
       var BUBBLESORT_DESCRIPTIONS_CONTAINER = $("#bubblesort_descriptions_container");
       var SELECTIONSORT_DESCRIPTIONS_CONTAINER = $("#selectionsort_descriptions_container");
       var QUICKSORT_DESCRIPTIONS_CONTAINER = $("#quicksort_descriptions_container");
+      var SHELLSORT_DESCRIPTION_CONTAINER = $("#shellsort_description_container");
 
       var PERFORMANCES_CONTAINER = $("#performances_container");
       var BUBBLESORT_PERFORFORMANCE_CONTAINER = $("#bubblesort_performance_container");
       var SELECTIONSORT_PERFORFORMANCE_CONTAINER = $("#selectionsort_performance_container");
       var QUICKSORT_PERFORFORMANCE_CONTAINER = $("#quicksort_performance_container");
+      var SHELLSORT_PERFORMANCE_CONTAINER = $("#shellsort_performance_Container");
 
       var DEFAULT_COLOR = "#777";
       var SELECTED_COLOR = "#00f";
@@ -54,11 +57,18 @@ $(function()
           pseudocode_container: QUICKSORT_PSEUDOCODE_CONTAINER,
           performance_container: QUICKSORT_PERFORFORMANCE_CONTAINER
       };
+      var SHELLSORT_OBJECT = {
+          func: shellsort,
+          description_container: SHELLSORT_DESCRIPTION_CONTAINER,
+          pseudocode_container: SHELLSORT_PSEUDOCODE_CONTAINER,
+          performance_container: SHELLSORT_PERFORMANCE_CONTAINER
+      };
 
       var ALGORITHMS = {
           "Bubble sort": BUBBLESORT_OBJECT,
           "Selection sort": SELECTION_OBJECT,
-          "Quick sort": QUICKSORT_OBJECT
+          "Quick sort": QUICKSORT_OBJECT,
+          "Shell sort": SHELLSORT_OBJECT
       };
       /*   "Heap sort": [heapsort, QUICKSORT_PSEUDOCODE_CONTAINER],
        "Shell sort": [shellsort, BUBBLESORT_PSEUDOCODE_CONTAINER],
@@ -123,25 +133,24 @@ $(function()
           if(first !== second)
           {
               alg_actions.push([GLOBAL_COMPARE_NAME, first, second, pseudocode_element_id]);
+              return array[first] > array[second];
           }
-
-          return array[first] > array[second];
       }
 
       function global_insert(array, alg_actions, index, value, pseudocode_element_id)
       {
-          alg_actions.push([GLOBAL_INSERT_NAME, index, value]);
+          alg_actions.push([GLOBAL_INSERT_NAME, index, value, pseudocode_element_id]);
           array[index] = value;
       }
 
-      function global_insert_extend(array, alg_actions, first, second, pseudocode_element_id)
+      /*function global_insert(array, alg_actions, first, second, pseudocode_element_id)
       {
           if(first !== second)
           {
               alg_actions.push([GLOBAL_INSERT_EXTEND_NAME, first, second]);
           }
           array[first] = array[second];
-      }
+      }*/
 
       function lock_dom_elements(lock)
       {
@@ -259,7 +268,7 @@ $(function()
           var elements_count = array.length;
           var actions = [];
           var steps_count = 0;
-          var ids = take_ids(BUBBLESORT_PSEUDOCODE_CONTAINER);
+          var ids = take_ids(BUBBLESORT_OBJECT.performance_container);
 
           for(var i = 0; i < elements_count - 1; i++)
           {
@@ -293,7 +302,7 @@ $(function()
           var elements_count = array.length;
           var actions = [];
           var steps_count = 0;
-          var ids = take_ids(SELECTIONSORT_PSEUDOCODE_CONTAINER);
+          var ids = take_ids(SELECTION_OBJECT.pseudocode_container);
 
           for(var i = 0; i < elements_count - 1; i++)
           {
@@ -335,7 +344,7 @@ $(function()
       {
           var actions = [];
           var steps_count = 0;
-          var ids = take_ids(QUICKSORT_PSEUDOCODE_CONTAINER);
+          var ids = take_ids(QUICKSORT_OBJECT.pseudocode_container);
 
           function partition(arr, pivot, left, right)
           {
@@ -460,30 +469,58 @@ $(function()
       function shellsort(array)
       {
           var actions = [];
-          var increment = array.length / 2;
-          while(increment > 0)
+          var gap = Math.round(array.length / 2);
+          var steps_count = 0;
+          var ids = take_ids(SHELLSORT_OBJECT.pseudocode_container);
+
+          actions.push(ids[0]);
+          steps_count++;
+
+          while(gap > 0)
           {
-              for(var i = increment; i < array.length; i++)
+              actions.push(ids[1]);
+              steps_count++;
+
+              for(var i = gap; i < array.length; i++)
               {
+                  actions.push(ids[2]);
+                  steps_count++;
+                  actions.push(ids[3]);
+                  steps_count++;
+                  actions.push(ids[4]);
+                  steps_count++;
+
+                  var temp = array[i];
                   var j = i;
-                  var tmp = array[i];
-                  while(j >= increment && array[j - increment] > tmp)
+
+                  while(j >= gap && array[j - gap] > temp)
                   {
-                      global_insert_extend(array, actions, j, j - increment);
-                      j = j - increment;
+                      actions.push(ids[5]);
+                      steps_count++;
+                      global_insert(array, actions, j, array[j - gap], ids[6]);
+                      steps_count++;
+
+                      actions.push(ids[7]);
+                      steps_count++;
+                      j = j - gap;
                   }
-                  global_insert(array, actions, j, tmp);
+
+                  actions.push(ids[8]);
+
+                  global_insert(array, actions, j, temp, ids[9]);
+                  steps_count++;
+
+                  actions.push(ids[10]);
               }
-              if(increment === 2)
-              {
-                  increment = 1;
-              }
-              else
-              {
-                  increment = parseInt(increment * 5 / 11);
-              }
+
+              actions.push(ids[11]);
+              actions.push(ids[12]);
+
+              gap = Math.round(gap * 5 / 11);
+              steps_count++;
           }
-          return actions;
+          
+          return [actions, steps_count];
       }
 
       function insertionsort(array)
@@ -592,9 +629,13 @@ $(function()
           else if(action === GLOBAL_INSERT_NAME)
           {
               var value = action_object[2];
+
               first_element = $(container).children().eq(action_object[1]);
+              pseudocode_element = $("#" + action_object[3]);
+
               $(first_element).css("background-color", SINGLE_CHANGE_COLOR);
               $(first_element).height(value);
+              $(pseudocode_element).css("background-color", SINGLE_CHANGE_COLOR);
           }
           else if(action === GLOBAL_INSERT_EXTEND_NAME)
           {

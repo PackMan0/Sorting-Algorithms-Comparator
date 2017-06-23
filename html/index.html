@@ -34,6 +34,9 @@
         <div>
             <button class='btn btn-lg btn-primary' id='stop_btn'>Stop</button>
         </div>
+        <label style="background-color: #00f; color: white;">&nbsp;&nbsp;Selected Element&nbsp;&nbsp;</label>
+        <label style="background-color: #09f; color: white;">&nbsp;&nbsp;Compared Element&nbsp;&nbsp;</label>
+        <label style="background-color: #2f0;">&nbsp;&nbsp;Elements to Swap&nbsp;&nbsp;</label>
     </div>
     <div id="algorithm_elements_container">
         <div class="element_container" id="first_algorithm_div">
@@ -91,11 +94,27 @@
         <p id="quicksort_func_end_if">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end if</p>
         <p id="quicksort_func_end">&nbsp;&nbsp;&nbsp;&nbsp;end function</p>
     </div>
+    <div id="shellsort_pseudocode_container">
+        <p id="shellsort_take_gap">&nbsp;&nbsp;&nbsp;&nbsp;gap = round(array.length / 2)</p>
+        <p id="shellsort_main_while">&nbsp;&nbsp;&nbsp;&nbsp;while gap > 0</p>
+        <p id="shellsort_for">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for i = gap to array.lenght</p>
+        <p id="shellsort_take_temp">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;temp = array[i]</p>
+        <p id="shellsort_take_j">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;j = i</p>
+        <p id="shellsort_inner_while">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while j >= gap and array[j - gap] > temp</p>
+        <p id="shellsort_inner_insert">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array[j] = array[j - gap]</p>
+        <p id="shellsort_calc_j">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;j = j - gap</p>
+        <p id="shellsort_inner_while_end">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end while</p>
+        <p id="shellsort_main_insert">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;array[j] = temp</p>
+        <p id="shellsort_for_end">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;end for</p>
+        <p id="shellsort_calc_gap">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gap = round(gap / 2)</p>
+        <p id="shellsort_main_while_end">&nbsp;&nbsp;&nbsp;&nbsp;end while</p>
+    </div>
 </div>
 <div id="descriptions_container">
 <p id="bubblesort_descriptions_container">&nbsp;&nbsp;&nbsp;&nbsp;Bubble sort, sometimes referred to as sinking sort, is a simple sorting algorithm that repeatedly steps through the list to be sorted, compares each pair of adjacent items and swaps them if they are in the wrong order. The pass through the list is repeated until no swaps are needed, which indicates that the list is sorted.</p>
 <p id="selectionsort_descriptions_container">&nbsp;&nbsp;&nbsp;&nbsp;Selection sort is a sorting algorithm that divides the input list into two parts: the sublist of items already sorted, which is built up from left to right at the front (left) of the list, and the sublist of items remaining to be sorted that occupy the rest of the list. Initially, the sorted sublist is empty and the unsorted sublist is the entire input list. The algorithm proceeds by finding the smallest (or largest, depending on sorting order) element in the unsorted sublist, exchanging (swapping) it with the leftmost unsorted element (putting it in sorted order), and moving the sublist boundaries one element to the right.</p>
 <p id="quicksort_descriptions_container">&nbsp;&nbsp;&nbsp;&nbsp;Quicksort is a divide and conquer algorithm in the style of merge sort. The basic idea is to find a “pivot” item in the array to compare all other items against, then shift items such that all of the items before the pivot are less than the pivot value and all the items after the pivot are greater than the pivot value. After that, recursively perform the same operation on the items before and after the pivot.</p>
+<p id="shellsort_description_container">&nbsp;&nbsp;&nbsp;&nbsp;Shellsort, also known as Shell sort or Shell's method, is an in-place comparison sort. It can be seen as either a generalization of sorting by exchange (bubble sort) or sorting by insertion (insertion sort). The method starts by sorting pairs of elements far apart from each other, then progressively reducing the gap between elements to be compared. Starting with far apart elements, it can move some out-of-place elements into position faster than a simple nearest neighbor exchange.</p>
 </div>
 <div id="performances_container">
     <div id="bubblesort_performance_container">
@@ -112,6 +131,12 @@
     </div>
     <div id="quicksort_performance_container">
         <p>Worst-case performance: O(n<sup>2</sup>)</p>
+        <p>Best-case performance: O(nlogn)</p>
+        <p>Average performance: O(nlogn)</p>
+        <p></p>
+    </div>
+    <div id="shellsort_performance_Container">
+        <p>Worst-case performance: O(nlog<sup>2</sup>n)</p>
         <p>Best-case performance: O(nlogn)</p>
         <p>Average performance: O(nlogn)</p>
         <p></p>
