@@ -35,11 +35,11 @@ $(function()
       var SHELLSORT_PERFORMANCE_CONTAINER = $("#shellsort_performance_Container");
       var INSERTATIONSORT_PERFORMANCE_CONTAINER = $("#insertationsort_performance_Container");
 
-      var DEFAULT_COLOR = "#777";
-      var SELECTED_COLOR = "#00f";
-      var COMPARED_COLOR = "#09f";
-      var SINGLE_CHANGE_COLOR = "#f00";
-      var SWAP_COLOR = "#2f0";
+      var DEFAULT_COLOR = "rgb(119, 119, 119)";
+      var SELECTED_COLOR = "rgb(0, 0, 255)";
+      var COMPARED_COLOR = "rgb(0, 153, 255)";
+      var SINGLE_CHANGE_COLOR = "rgb(255, 0, 0)";
+      var SWAP_COLOR = "rgb(34, 255, 0)";
       var TEXT_DEFAULT_COLOR = "#C0C0C0";
 
       var BUBBLESORT_OBJECT = {
@@ -240,6 +240,24 @@ $(function()
                                        });
 
           return steps_count;
+      }
+
+      function find_is_it_new_selected(container, element, color)
+      {
+            if($(element).css("background-color") === DEFAULT_COLOR)
+            {
+                $(container).children().each(function()
+                {
+                    if($(this).css("background-color") !== DEFAULT_COLOR)
+                    {
+                        $(this).css("background-color", DEFAULT_COLOR);
+                    }
+                });
+
+                $(element).css("background-color", color);
+
+                return null;
+            }
       }
 
       //###########################################################################
@@ -613,7 +631,8 @@ $(function()
               second_element = $(container).children().eq(action_object[2]);
               pseudocode_element = $("#" + action_object[3]);
 
-              $(first_element).css("background-color", SELECTED_COLOR);
+              first_element = find_is_it_new_selected(container, first_element, SELECTED_COLOR);
+              //$(first_element).css("background-color", SELECTED_COLOR);
               $(second_element).css("background-color", COMPARED_COLOR);
               $(pseudocode_element).css("background-color", COMPARED_COLOR);
           }
