@@ -38,8 +38,10 @@ $(function()
       var DEFAULT_COLOR = "rgb(119, 119, 119)";
       var SELECTED_COLOR = "rgb(0, 0, 255)";
       var COMPARED_COLOR = "rgb(0, 153, 255)";
-      var SINGLE_CHANGE_COLOR = "rgb(255, 0, 0)";
+      var INSERT_INTO_ELEMENT_COLOR = "rgb(255, 0, 0)";
       var SWAP_COLOR = "rgb(34, 255, 0)";
+      var VALUE_TO_TAKE_COLOR = "rgb(187, 187, 0)";
+      var TEMP_VALUE_COLOR = "rgb(160, 0, 192)";
       var TEXT_DEFAULT_COLOR = "#C0C0C0";
 
       var BUBBLESORT_OBJECT = {
@@ -91,6 +93,8 @@ $(function()
       var GLOBAL_SWAP_NAME = "swap";
       var GLOBAL_COMPARE_NAME = "compare";
       var GLOBAL_INSERT_NAME = "insert";
+      var GLOBAL_INSERT_EXTEND_NAME = "insert_extend";
+      var GLOBAL_TAKE_TEMP = "take_temp";
 
       var SPACING = 3;
       var ELEMENTS_CONTAINERS_WIDTH = $(ELEMENTS_CONTAINERS[0]).width();
@@ -123,24 +127,24 @@ $(function()
       //HELPER METHODS
       //###########################################################################
 
-      function global_swap(array, alg_actions, first, second, pseudocode_element_id)
+      function global_swap(array, alg_actions, first_index, second_index, pseudocode_element_id)
       {
-          if(first !== second)
+          if(first_index !== second_index)
           {
-              alg_actions.push([GLOBAL_SWAP_NAME, first, second, pseudocode_element_id]);
-          }
+              alg_actions.push([GLOBAL_SWAP_NAME, first_index, second_index, pseudocode_element_id]);
 
-          var t = array[first];
-          array[first] = array[second];
-          array[second] = t;
+              var t = array[first_index];
+              array[first_index] = array[second_index];
+              array[second_index] = t;
+          }
       }
 
-      function global_compare(array, alg_actions, first, second, pseudocode_element_id)
+      function global_compare(array, alg_actions, first_index, second_index, pseudocode_element_id)
       {
-          if(first !== second)
+          if(first_index !== second_index)
           {
-              alg_actions.push([GLOBAL_COMPARE_NAME, first, second, pseudocode_element_id]);
-              return array[first] > array[second];
+              alg_actions.push([GLOBAL_COMPARE_NAME, first_index, second_index, pseudocode_element_id]);
+              return array[first_index] > array[second_index];
           }
       }
 
@@ -150,14 +154,21 @@ $(function()
           array[index] = value;
       }
 
-      /*function global_insert(array, alg_actions, first, second, pseudocode_element_id)
+      function global_insert_extend(array, alg_actions, first_index, second_index, pseudocode_element_id)
       {
-          if(first !== second)
+          if(first_index !== second_index)
           {
-              alg_actions.push([GLOBAL_INSERT_EXTEND_NAME, first, second]);
+              alg_actions.push([GLOBAL_INSERT_EXTEND_NAME, first_index, second_index, pseudocode_element_id]);
+
+              array[first_index] = array[second_index];
           }
-          array[first] = array[second];
-      }*/
+      }
+
+      function global_take_temp(array, alg_actions, index, pseudocode_element_id)
+      {
+          alg_actions.push([GLOBAL_TAKE_TEMP, index, pseudocode_element_id]);
+          return array[index];
+      }
 
       function lock_dom_elements(lock)
       {
@@ -232,32 +243,33 @@ $(function()
           var steps_count = [];
 
           $(actions).each(function()
-                                       {
-                                           if(this.indexOf("end") === -1)
-                                           {
-                                               steps_count++;
-                                           }
-                                       });
+                          {
+                              if(this.indexOf("end") === -1)
+                              {
+                                  steps_count++;
+                              }
+                          });
 
           return steps_count;
       }
 
       function find_is_it_new_selected(container, element, color)
       {
-            if($(element).css("background-color") === DEFAULT_COLOR)
-            {
-                $(container).children().each(function()
-                {
-                    if($(this).css("background-color") !== DEFAULT_COLOR)
-                    {
-                        $(this).css("background-color", DEFAULT_COLOR);
-                    }
-                });
+          var curr_color = $(element).css("background-color");
+          if(curr_color === DEFAULT_COLOR || curr_color !== color)
+          {
+              $(container).children().each(function()
+                                           {
+                                               if($(this).css("background-color") !== DEFAULT_COLOR)
+                                               {
+                                                   $(this).css("background-color", DEFAULT_COLOR);
+                                               }
+                                           });
 
-                $(element).css("background-color", color);
+              $(element).css("background-color", color);
 
-                return null;
-            }
+              element = null;
+          }
       }
 
       //###########################################################################
@@ -442,42 +454,47 @@ $(function()
       {
           var actions = [];
 
-          function heapify(heapSize, i)
+          function shift_down(arr, start)
           {
-              var left = i * 2 + 1;
-              var right = i * 2 + 2;
-              var largest = i;
+              var left = start * 2 + 1;
+              var right = start * 2 + 2;
+              var largest = start;
+
               if(left < heapSize && global_compare(array, actions, left, largest))
               {
                   largest = left;
               }
+
               if(right < heapSize && global_compare(array, actions, right, largest))
               {
                   largest = right;
               }
+
               if(largest !== i)
               {
                   global_swap(array, actions, i, largest);
                   heapify(heapSize, largest);
               }
+
           }
 
-          function buildHeap(heapSize)
+          function heapify(arr)
           {
-              for(var i = Math.floor(array.length / 2); i >= 0; i--)
+              for(var i = Math.floor(arr.length / 2); i >= 0; i--)
               {
-                  heapify(heapSize, i);
+                  shift_down(arr, i);
               }
           }
 
-          function perform_heapSort()
+          function perform_heapSort(arr)
           {
-              var heapSize = array.length;
-              buildHeap(heapSize);
-              while(heapSize > 1)
+              heapify(arr, arr.length);
+
+              for(var i = arr.length - 1; i > 0, i--)
               {
-                  global_swap(array, actions, 0, --heapSize);
-                  heapify(heapSize, 0);
+                  global_swap(arr, actions, 0, i);
+
+                  shift_down(arr, 0, i);
               }
           }
 
@@ -542,14 +559,13 @@ $(function()
           {
               actions.push(ids[0]);
 
-              var temp = array[i];
-              actions.push(ids[1]);
+              var temp = global_take_temp(array, actions, i, ids[1]);
 
               for(var j = i - 1; j >= 0 && (array[j] > temp); j--)
               {
                   actions.push(ids[2]);
 
-                  global_insert(array, actions, j + 1, array[j], ids[3]);
+                  global_insert_extend(array, actions, j + 1, j, ids[3]);
 
                   actions.push(ids[4]);
               }
@@ -599,12 +615,6 @@ $(function()
 
       function step(container, actions)
       {
-          /*
-           * Consumes one step from the action buffer, using it to update
-           * the display version of the array and the color array; then
-           * draws the display array to the canvas. You should not call this
-           * manually.
-           */
           if(actions.length === 0)
           {
               if(container === ELEMENTS_CONTAINERS[0])
@@ -631,8 +641,8 @@ $(function()
               second_element = $(container).children().eq(action_object[2]);
               pseudocode_element = $("#" + action_object[3]);
 
-              first_element = find_is_it_new_selected(container, first_element, SELECTED_COLOR);
-              //$(first_element).css("background-color", SELECTED_COLOR);
+              find_is_it_new_selected(container, first_element, SELECTED_COLOR);
+
               $(second_element).css("background-color", COMPARED_COLOR);
               $(pseudocode_element).css("background-color", COMPARED_COLOR);
           }
@@ -657,18 +667,30 @@ $(function()
               first_element = $(container).children().eq(action_object[1]);
               pseudocode_element = $("#" + action_object[3]);
 
-              $(first_element).css("background-color", SINGLE_CHANGE_COLOR);
+              find_is_it_new_selected(container, first_element, INSERT_INTO_ELEMENT_COLOR);
               $(first_element).height(value);
-              $(pseudocode_element).css("background-color", SINGLE_CHANGE_COLOR);
+              $(pseudocode_element).css("background-color", INSERT_INTO_ELEMENT_COLOR);
           }
-          /*else if(action === GLOBAL_INSERT_EXTEND_NAME)
+          else if(action === GLOBAL_INSERT_EXTEND_NAME)
           {
               first_element = $(container).children().eq(action_object[1]);
               second_element = $(container).children().eq(action_object[2]);
-              $(first_element).css("background-color", SWAP_COLOR);
-              $(second_element).css("background-color", SWAP_COLOR);
+              pseudocode_element = $("#" + action_object[3]);
+
+              find_is_it_new_selected(container, first_element, INSERT_INTO_ELEMENT_COLOR);
+              $(second_element).css("background-color", VALUE_TO_TAKE_COLOR);
               $(first_element).height(second_element.height());
-          }*/
+              $(pseudocode_element).css("background-color", VALUE_TO_TAKE_COLOR);
+          }
+          else if(action === GLOBAL_TAKE_TEMP)
+          {
+              first_element = $(container).children().eq(action_object[1]);
+              pseudocode_element = $("#" + action_object[2]);
+
+              $(first_element).css("background-color", TEMP_VALUE_COLOR);
+              first_element = null;
+              $(pseudocode_element).css("background-color", TEMP_VALUE_COLOR);
+          }
           else
           {
               pseudocode_element = $("#" + action_object);
@@ -788,8 +810,11 @@ $(function()
           var first_alg_steps_count = first_alg_result[1];
           var second_alg_steps_count = second_alg_result[1];
 
-          $(_first_alg_object.performance_container).children().last().empty().append("<p>Steps Made: "+first_alg_steps_count+"</p>");
-          $(_second_alg_object.performance_container).children().last().empty().append("<p>Steps Made: "+second_alg_steps_count+"</p>");
+          $(_first_alg_object.performance_container).children().last().empty().append("<p>Steps Made: "
+                                                                                      + first_alg_steps_count + "</p>");
+          $(_second_alg_object.performance_container).children().last().empty().append("<p>Steps Made: "
+                                                                                       + second_alg_steps_count
+                                                                                       + "</p>");
 
           $(INFO_CONTAINERS[0]).empty();
           $(INFO_CONTAINERS[1]).empty();
