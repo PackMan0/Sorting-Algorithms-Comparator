@@ -92,8 +92,7 @@ $(function()
           "Insertion sort": INSERTATIONSORT_OBJECT,
           "Heap sort": HEAPSORT_OBJECT
       };
-      /*   "Heap sort": [heapsort, QUICKSORT_PSEUDOCODE_CONTAINER]
-       };*/
+
       var ARRAY_TYPES = {
           "Random": random_numbers,
           "Reversed": revers_sorted,
@@ -670,12 +669,19 @@ $(function()
               if(container === ELEMENTS_CONTAINERS[0])
               {
                   window.clearInterval(_first_setInterval_id);
+                  _first_setInterval_id = null;
               }
               else
               {
                   window.clearInterval(_second_setInterval_id);
+                  _second_setInterval_id = null;
+              }
+
+              if(_first_setInterval_id === null && _second_setInterval_id === null)
+              {
                   lock_dom_elements(false);
               }
+
               return;
           }
 
@@ -763,6 +769,17 @@ $(function()
                                       {
                                           _elements_count = parseInt($(this).val(), 10);
 
+                                          if(_elements_count < 10 || isNaN(_elements_count) )
+                                          {
+                                              $(this).val(10);
+                                              _elements_count = 10;
+                                          }
+                                          else if(_elements_count > 200)
+                                          {
+                                              $(this).val(200);
+                                              _elements_count = 200;
+                                          }
+
                                           refresh_content();
                                       });
 
@@ -828,7 +845,18 @@ $(function()
 
       $(INTERVAL_SELECT).change(function()
                                 {
-                                    _interval = $(this).val();
+                                    _interval = parseInt($(this).val(), 10);
+
+                                    if(_interval < 250 || isNaN(_interval) )
+                                    {
+                                        $(this).val(250);
+                                        _interval = 250;
+                                    }
+                                    else if(_interval > 2000)
+                                    {
+                                        $(this).val(2000);
+                                        _interval = 2000;
+                                    }
 
                                     if(_had_been_started)
                                     {
